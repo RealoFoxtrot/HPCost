@@ -8,10 +8,10 @@ public class UIManager : MonoBehaviour
     public GameObject[] UiElements;
     public Slider MSlider;
     public Slider SSlider;
-    public Text PlayerMessage;
-    public GameObject Cref;
-    public GameObject Tutorial;
-    public GameObject TutorialPrefab;
+
+    /*ui prefabs*/
+    public GameObject SkillText;
+    public GameObject EnemyStat;
 
     public void OverlayUI()
     {
@@ -27,6 +27,12 @@ public class UIManager : MonoBehaviour
         if (Mref.Gref.Credits)
         {
             OpenCredits();
+        }
+        if (Mref.Gref.BattleMode)
+        {
+            Statbar();
+            SetupActions();
+            UpdateEnemyStats();
         }
     }
     void CloseAllUI()
@@ -113,7 +119,7 @@ public class UIManager : MonoBehaviour
     }
     public void StartGame()
     {
-
+        Mref.Gref.SetupGame();
         Mref.Sref.PlaySound(0);
     }
     public void ViewCredits()
@@ -146,6 +152,66 @@ public class UIManager : MonoBehaviour
         Mref.Gref.Mainmenu = true;
         Mref.Gref.Credits = false;
         OverlayUI();
+    }
+    /*In Play*/
+    public void UpdateStats()
+
+
+    {
+        float percentage = ((float)Mref.Cref.HP / (float)Mref.Cref.MaxHP)*195;
+        int sethealth =(int)( percentage);
+        UiElements[3].transform.FindChild("HealthBar").FindChild("Level").GetComponent<LayoutElement>().preferredWidth = sethealth;
+   percentage = ((float)Mref.Cref.Will / (float)Mref.Cref.Maxwill) * 195;
+        sethealth = (int)(percentage);
+        UiElements[3].transform.FindChild("WillBar").FindChild("Level").GetComponent<LayoutElement>().preferredWidth = sethealth;
+        UiElements[3].transform.FindChild("RoomName").GetComponentInChildren<Text>().text = Mref.Gref.Currentroom;
+    }
+    public void Statbar()
+    {
+        UiElements[3].SetActive(true);
+    }
+    public void SetupActions()
+    {
+        UiElements[4].SetActive(true);
+        foreach(Transform Child in UiElements[4].transform)
+        {
+            Destroy(Child.gameObject);
+        }
+        for (int i = 0; i < Mref.Cref.Learned.Count; i++)
+                    {
+            SkillClass Sref = Mref.Cref.Learned[i];
+            GameObject S = Instantiate(SkillText);
+            S.GetComponent<ActionScript>().Setup(Sref.NameSkill, Sref.DescribeSkill, Mref, UiElements[5], UiElements[5].GetComponentInChildren<Text>());
+            S.transform.SetParent(UiElements[4].transform);
+            S.GetComponent<Text>().text = Sref.NameSkill;
+        }
+    }
+    public void SetupEnemyStats()
+    {
+        for (int i = 0; i < Mref.Gref.Location.Enemies; i++)
+        {
+            Creature C = Mref.Gref.Location.Encounters[i];
+            GameObject E = Instantiate(EnemyStat);
+            E.transform.SetParent(UiElements[6].transform);
+            EnemyStat.GetComponentInChildren<Text>().text = C.Name;
+            EnemyStat.GetComponentInChildren<TargetScript>().Setup(i, Mref);
+            float percentage = ((float)C.CurrentHealth/ (float)C.CurrentHealth) * 115;
+            int sethealth = (int)(percentage);
+            E.transform.FindChild("HealthBar").FindChild("Level").GetComponent<LayoutElement>().preferredWidth = sethealth;
+        }
+    }
+    public void UpdateEnemyStats()
+    {
+        UiElements[6].SetActive(true);
+        for (int i = 0; i < Mref.Gref.Location.Enemies; i++)
+        {
+            Creature C = Mref.Gref.Location.Encounters[i];
+            GameObject E = UiElements[6].transform.GetChild(i).gameObject;
+            EnemyStat.GetComponentInChildren<Text>().text = C.Name;
+            float percentage = ((float)C.CurrentHealth / (float)C.MaxHealth) * 115;
+            int sethealth = (int)(percentage);
+            E.transform.FindChild("HealthBar").FindChild("Level").GetComponent<LayoutElement>().preferredWidth = sethealth;
+        }
     }
 }
 

@@ -7,4 +7,5 @@ public class MasterScript : MonoBehaviour {
     public SoundCardScript Sref;
     public ObjectManager Oref;
     public UIManager Uref;
+    public CharacterScript Cref;
 }

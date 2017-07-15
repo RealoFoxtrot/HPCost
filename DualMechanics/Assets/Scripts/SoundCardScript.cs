@@ -20,12 +20,14 @@ public class SoundCardScript : MonoBehaviour
     0 - Button Success;
     1 - Alert Player;
     2 - Button Failure;
-
+    3 - action select;
     */
 
     /*
     Music Needed
-    0- Menu Music
+    0 - Menu Music
+    1 - battleroom music
+    2 - respite music
     */
 
 
