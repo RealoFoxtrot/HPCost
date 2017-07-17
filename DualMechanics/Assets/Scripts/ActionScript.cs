@@ -9,11 +9,14 @@ public class ActionScript : MonoBehaviour {
     MasterScript Mref;
     string TextUse;
     string DetailUse;
+    SkillClass Sref;
 
-    public void Setup(string T, string D, MasterScript M, GameObject G, Text F)
+
+    public void Setup(SkillClass S, MasterScript M, GameObject G, Text F)
     {
-        TextUse = T;
-        DetailUse = D;
+        Sref = S;
+        TextUse = S.NameSkill;
+        DetailUse = S.DescribeSkill;
         Mref = M;
         Detail = G;
         Flavour = F;
@@ -31,8 +34,22 @@ public class ActionScript : MonoBehaviour {
     }
     public void Pressed()
     {
-        Mref.Sref.PlaySound(3);
-        Mref.Cref.useskill(TextUse);
-        CloseDetail();
+        if (Mref.Gref.BattleMode)
+        {
+            Mref.Sref.PlaySound(3);
+            Mref.Cref.useskill(TextUse);
+            CloseDetail();
+        }
+        else if (Mref.Gref.RespiteMode)
+        {
+            if (Mref.Cref.Will > Sref.LearnCost - 1)
+            {
+                Mref.Cref.boostwill(-Sref.LearnCost);
+                Mref.Cref.Learned.Add(Sref);
+                Mref.Uref.UpdateStats();
+                Destroy(gameObject);
+            }
+           
+        }
     }
 }

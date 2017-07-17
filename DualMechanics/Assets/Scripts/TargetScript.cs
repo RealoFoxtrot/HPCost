@@ -14,6 +14,12 @@ public class TargetScript : MonoBehaviour {
 
     public void Pressed()
     {
-        Mref.Gref.Target = value;
+        if (Mref.Gref.Location.Encounters[value].Active)
+        {
+            Debug.Log(value);
+            Mref.Gref.Target = value;
+            Mref.Sref.PlaySound(3);
+        }
+
     }
 }

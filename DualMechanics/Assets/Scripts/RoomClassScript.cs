@@ -18,8 +18,14 @@ public class RoomClassScript{
         Encounters = new Creature[Enemies];
         for (int i = 0; i < Enemies; i++)
         {
-            int dice = Random.Range(0, Mref.Oref.EnemyList.Count);
-            Encounters[i] = Mref.Oref.EnemyList[dice];
+            int limit = CurrentDifficulty + 1;
+            if (limit > Mref.Oref.EnemyList.Count)
+            {
+                limit = Mref.Oref.EnemyList.Count;
+            }
+            int dice = Random.Range(0, limit);
+            Encounters[i] = new Creature(Mref.Oref.EnemyList[dice]);
+           
         }
     }
 }
